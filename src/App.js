@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./css/App.css";
+import { GeneralContext, AuthContext, LanguageContext } from "./contexts";
+import { BrowserRouter as Router, Switch } from "react-router-dom";
+import { Dashboard, Login } from "./pages";
+import { CustomRoute } from "./components";
 
-function App() {
+const App = () => {
+  const [auth, setAuth] = React.useState(null);
+
+  React.useEffect(() => {
+    console.log(auth);
+  }, [auth]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <LanguageContext.Wrap>
+      <AuthContext.Provider value={{ auth, setAuth }}>
+        <GeneralContext.default>
+          <Router>
+            <Switch>
+              <CustomRoute.Auth path="/login">
+                <Login />
+              </CustomRoute.Auth>
+              <CustomRoute.Private path="/" exact={true}>
+                <Dashboard />
+              </CustomRoute.Private>
+            </Switch>
+          </Router>
+        </GeneralContext.default>
+      </AuthContext.Provider>
+    </LanguageContext.Wrap>
   );
-}
+};
 
 export default App;
